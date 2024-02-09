@@ -2,7 +2,7 @@ const canvas = document.getElementById('signatureCanvas');
 const ctx = canvas.getContext('2d');
 
 resizeCanvas();
-window.addEventListener('resize', resizeCanvas); 
+window.addEventListener('resize', resizeCanvas);
 
 function resizeCanvas() {
     canvas.width = window.innerWidth * 0.8;
@@ -17,12 +17,13 @@ let lastY = 0;
 
 function draw(e) {
     if (!isDrawing) return;
-    e.preventDefault(); 
+    e.preventDefault();
 
     let x, y;
     if (e.touches) {
-        x = e.touches[0].clientX - canvas.offsetLeft;
-        y = e.touches[0].clientY - canvas.offsetTop;
+        const rect = canvas.getBoundingClientRect();
+        x = e.touches[0].clientX - rect.left;
+        y = e.touches[0].clientY - rect.top;
     } else {
         x = e.offsetX;
         y = e.offsetY;
@@ -41,9 +42,11 @@ canvas.addEventListener('mousedown', (e) => {
     isDrawing = true;
     [lastX, lastY] = [e.offsetX, e.offsetY];
 });
+
 canvas.addEventListener('touchstart', (e) => {
     isDrawing = true;
-    [lastX, lastY] = [e.touches[0].clientX - canvas.offsetLeft, e.touches[0].clientY - canvas.offsetTop];
+    const rect = canvas.getBoundingClientRect();
+    [lastX, lastY] = [e.touches[0].clientX - rect.left, e.touches[0].clientY - rect.top];
 });
 
 canvas.addEventListener('mousemove', draw);
